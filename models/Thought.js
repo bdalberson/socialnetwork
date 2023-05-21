@@ -1,9 +1,15 @@
-const { Schema, Types } = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const Thought = new Schema(
+const thoughtSchema = new Schema(
   {
-    thoughttext: String,
-    Date: Date,
+    thoughtText: {
+      type: String,
+      default: true,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     toJSON: {
@@ -13,6 +19,7 @@ const Thought = new Schema(
   }
 );
 
+const Thought = model('thought', thoughtSchema);
 
 
 module.exports = Thought;
