@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
-const Tag = require('./Tag');
+const { Reaction } = require('.');
+const Tag = require('./Thought');
 
 // Schema to create Post model
 const applicationSchema = new Schema(
@@ -42,4 +43,4 @@ applicationSchema
 // Initialize our Application model
 const Application = model('application', applicationSchema);
 
-module.exports = Application;
+module.exports = Reaction;
