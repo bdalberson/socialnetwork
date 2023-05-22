@@ -1,172 +1,110 @@
 # socialnetwork
 
+| Technology Used         | Resource URL           | 
+| ------------- |:-------------:| 
+| Git | [https://git-scm.com/](https://git-scm.com/)     |    
+| JavaScript | [https://developer.mozilla.org/en-US/docs/Web/JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript)     
+| Node.JS| [https://developer.mozilla.org/en-US/docs/Glossary/Node.js?utm_source=wordpress%20blog&utm_medium=content%20link&utm_campaign=promote%20mdn](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API)    
+| MongoDB |:https://www.mongodb.com/:| 
+| Mongoose|:https://mongoosejs.com/docs/:| 
 
-NoSQL Challenge: Social Network API
-MongoDB is a popular choice for many social networks due to its speed with large amounts of data and flexibility with unstructured data. Over the last part of this course, you’ll use several of the technologies that social networking platforms use in their full-stack applications. Because the foundation of these applications is data, it’s important that you understand how to build and structure the API first.
 
-Your challenge is to build an API for a social network web application where users can share their thoughts, react to friends’ thoughts, and create a friend list. You’ll use Express.js for routing, a MongoDB database, and the Mongoose ODM. In addition to using the Express.jsLinks to an external site. and MongooseLinks to an external site. packages, you may also optionally use a JavaScript date library of your choice or the native JavaScript Date object to format timestamps.
 
-Because this application won’t be deployed, you’ll also need to create a walkthrough video that demonstrates its functionality and all of the following acceptance criteria being met. You’ll need to submit a link to the video and add it to the README of your project.
+## Description 
+![plot](./assets/photo.png)
 
-User Story
-AS A social media startup
-I WANT an API for my social network that uses a NoSQL database
-SO THAT my website can handle large amounts of unstructured data
-Acceptance Criteria
-GIVEN a social network API
-WHEN I enter the command to invoke the application
-THEN my server is started and the Mongoose models are synced to the MongoDB database
-WHEN I open API GET routes in Insomnia for users and thoughts
-THEN the data for each of these routes is displayed in a formatted JSON
-WHEN I test API POST, PUT, and DELETE routes in Insomnia
-THEN I am able to successfully create, update, and delete users and thoughts in my database
-WHEN I test API POST and DELETE routes in Insomnia
-THEN I am able to successfully create and delete reactions to thoughts and add and remove friends to a user’s friend list
-Mock-Up
-The following animations show examples of the application's API routes being tested in Insomnia.
 
-The following animation shows GET routes to return all users and all thoughts being tested in Insomnia:
+Video of the application in action: https://drive.google.com/file/d/1KuBuWjxpKzC7Q8e6FFLFjotGjmJf4FYR/view
 
-Demo of GET routes to return all users and all thoughts being tested in Insomnia.
+This is a social media backend which has a collection of users, their thoughts and reactions to those thoughts.  
 
-The following animation shows GET routes to return a single user and a single thought being tested in Insomnia:
 
-Demo that shows GET routes to return a single user and a single thought being tested in Insomnia.
 
-The following animation shows the POST, PUT, and DELETE routes for users being tested in Insomnia:
+## Code Refactor Example
 
-Demo that shows the POST, PUT, and DELETE routes for users being tested in Insomnia.
 
-In addition to this, your walkthrough video should show the POST, PUT, and DELETE routes for thoughts being tested in Insomnia.
+Below is a model table for mongodb for User creation
 
-The following animation shows the POST and DELETE routes for a user’s friend list being tested in Insomnia:
+```Javascript
 
-Demo that shows the POST and DELETE routes for a user’s friend list being tested in Insomnia.
 
-In addition to this, your walkthrough video should show the POST and DELETE routes for reactions to thoughts being tested in Insomnia.
+cconst thoughtSchema = new Schema(
+  {
+    thoughtText: {
+      type: String,
+      required: true,
+      minlength: 1,
+      maxlength: 280,
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
+    username: {
+      type: String,
+      required: true,
+    },
+    reactions: [reactionSchema],
+  },
+  {
+    toJSON: {
+      getters: true,
+    },
+    id: false,
+  }
+);
+```
 
-Getting Started
-Use the following guidelines to set up your models and API routes:
+Below is a route for creating a new reactioon
 
-Models
-User
+``` JavaScript
 
-username
+router.post('/:thoughtId/reactions', async (req, res) => {
+  try {
+    const { thoughtId } = req.params;
+    const thought = await Thought.findOneAndUpdate(
+        {_id: thoughtId},
+        {$addToSet: {reactions:req.body}},
+        {new: true}
+    );
+    if (!thought) {
+      return res.status(404).json({ error: 'Thought not found' });
+    }
+    res.status(201).json(thought);
+  } catch (err) {
+    res.status(400).json({ error: 'Failed to create reaction' });
+  }
+});
 
-String
-Unique
-Required
-Trimmed
-email
+``` 
 
-String
-Required
-Unique
-Must match a valid email address (look into Mongoose's matching validation)
-thoughts
 
-Array of _id values referencing the Thought model
-friends
 
-Array of _id values referencing the User model (self-reference)
-Schema Settings
+## Usage 
 
-Create a virtual called friendCount that retrieves the length of the user's friends array field on query.
+You will need to clone down all the repro.  Install the needed NPM packages. Then you will be able to execute the program by running "npm start server"
 
-Thought
 
-thoughtText
+## Learning Points 
 
-String
-Required
-Must be between 1 and 280 characters
-createdAt
 
-Date
-Set default value to the current timestamp
-Use a getter method to format the timestamp on query
-username (The user that created this thought)
+This was all about learning how to use MongoDB and I got to say I think its a bit easier and less cumbersome than MySQL.  I don't find relational databases all that intuitive but i love how straight forward this stuff is.   
 
-String
-Required
-reactions (These are like replies)
+## Author Info
 
-Array of nested documents created with the reactionSchema
-Schema Settings
+SWEngineer looking to learn as much as I can, hope to one day solo create an amazing videogame. 
 
-Create a virtual called reactionCount that retrieves the length of the thought's reactions array field on query.
+* [Portfolio](https://bdalberson.github.io/Course2Biopage/)
+* [LinkedIn](https://www.linkedin.com/in/brian-alberson-464b2271/)
+* [Github](https://github.com/bdalberson)
+```
 
-Reaction (SCHEMA ONLY)
+## Credits
 
-reactionId
+TAs like Kyle helped a lot, study groups, and of course my family giving me time and space and work on this code money stuff. 
 
-Use Mongoose's ObjectId data type
-Default value is set to a new ObjectId
-reactionBody
+---
 
-String
-Required
-280 character maximum
-username
-
-String
-Required
-createdAt
-
-Date
-Set default value to the current timestamp
-Use a getter method to format the timestamp on query
-Schema Settings
-
-This will not be a model, but rather will be used as the reaction field's subdocument schema in the Thought model.
-
-API Routes
-/api/users
-
-GET all users
-
-GET a single user by its _id and populated thought and friend data
-
-POST a new user:
-
-// example data
-{
-  "username": "lernantino",
-  "email": "lernantino@gmail.com"
-}
-PUT to update a user by its _id
-
-DELETE to remove user by its _id
-
-BONUS: Remove a user's associated thoughts when deleted.
-
-/api/users/:userId/friends/:friendId
-
-POST to add a new friend to a user's friend list
-
-DELETE to remove a friend from a user's friend list
-
-/api/thoughts
-
-GET to get all thoughts
-
-GET to get a single thought by its _id
-
-POST to create a new thought (don't forget to push the created thought's _id to the associated user's thoughts array field)
-
-// example data
-{
-  "thoughtText": "Here's a cool thought...",
-  "username": "lernantino",
-  "userId": "5edff358a0fcb779aa7b118b"
-}
-PUT to update a thought by its _id
-
-DELETE to remove a thought by its _id
-
-/api/thoughts/:thoughtId/reactions
-
-POST to create a reaction stored in a single thought's reactions array field
-
-DELETE to pull and remove a reaction by the reaction's reactionId value
+## Tests
+Just testing using MongoDB Compass to verify datatables and Insomnia to verify route data.   
 
