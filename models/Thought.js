@@ -14,7 +14,7 @@ const reactionSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: (timestamp) => dateFormat(timestamp),
+      // get: (timestamp) => dateFormat(timestamp),
     },
   },
   {
@@ -36,7 +36,7 @@ const thoughtSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: (timestamp) => dateFormat(timestamp),
+      // get: (timestamp) => dateFormat(timestamp),
     },
     username: {
       type: String,
@@ -60,6 +60,4 @@ const Thought = model('Thought', thoughtSchema);
 
 module.exports = Thought;
 
-const Reaction = model('reaction', reactionSchema);
 
-module.exports = Reaction;

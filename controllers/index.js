@@ -6,7 +6,6 @@ const router = express.Router();
 router.use('/api', apiRoutes);
 
 router.use((req, res) => {
-  return res.send('Wrong route!');
+  res.send("<h1>Wrong Route!</h1>")
 });
-
 module.exports = router;
